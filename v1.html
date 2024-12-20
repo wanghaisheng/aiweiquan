@@ -1,0 +1,2565 @@
+
+<html><head><base href=".">
+<style>
+:root {
+  --grid-size: 5;
+  --face-size: 80px;
+  --background: #1a1a1a;
+  --text-color: #f0f0f0;
+  --nav-height: 60px;
+  --card-red: #ff4d4d;
+  --card-blue: #4d79ff;
+  --card-green: #4dff4d;
+  --card-yellow: #ffd24d;
+}
+
+body {
+  margin: 0;
+  padding-top: var(--nav-height);
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text-color);
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-menu {
+  background: #2a2a2a;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 300px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.nav-menu.open {
+  transform: translateX(0);
+}
+
+.nav-header {
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  justify-content: space-between;
+  background: #2a2a2a;
+  cursor: pointer;
+}
+
+.nav-content {
+  padding: 20px;
+}
+
+.nav-toggle::before {
+  content: '◀';
+  transition: transform 0.3s ease;
+}
+
+.nav-menu.open .nav-toggle::before {
+  transform: rotate(180deg);
+  content: '▶';
+}
+
+.nav-content {
+  height: auto;
+}
+
+.nav-menu.open .nav-content {
+  height: auto;
+  padding: 20px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 20px;
+}
+
+.nav-link {
+  color: var(--text-color);
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.nav-link:hover {
+  background: #3a3a3a;
+}
+
+.page {
+  display: none;
+  padding: 20px;
+}
+
+.page.active {
+  display: block;
+}
+
+.rights-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.rights-card {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 20px;
+  padding: 30px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.rights-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.rights-card.social-media {
+  border-left: 5px solid var(--card-red);
+}
+
+.rights-card.labor {
+  border-left: 5px solid var(--card-blue);
+}
+
+.rights-card.consumer {
+  border-left: 5px solid var(--card-green);
+}
+
+.rights-card.personal {
+  border-left: 5px solid var(--card-yellow);
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  transition: transform 0.4s ease;
+}
+
+.rights-card:hover .card-icon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  background: linear-gradient(45deg, #fff, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card-description {
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.card-steps {
+  margin-top: 15px;
+  padding-left: 20px;
+}
+
+.card-steps li {
+  margin-bottom: 8px;
+  color: #888;
+}
+
+.wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.face {
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.face:hover {
+  transform: translateY(-15px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.face-info {
+  background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+  padding: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+  color: white;
+  border-radius: 0 0 20px 20px;
+}
+
+.face:hover .face-info {
+  transform: translateY(0);
+}
+
+.success-type {
+  color: var(--card-green);
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.success-date {
+  color: #aaa;
+  font-size: 0.7rem;
+  margin-bottom: 5px;
+}
+
+.success-desc {
+  line-height: 1.2;
+}
+
+.names-wall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.name {
+  background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+  padding: 12px 24px;
+  border-radius: 30px;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.name:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.name .message {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 15px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+  padding: 15px 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.name:hover .message {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.load-profiles {
+  margin: 20px auto;
+  padding: 12px 24px;
+  background: #4a4a4a;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  display: block;
+}
+
+.load-profiles:hover {
+  background: #5a5a5a;
+}
+
+.filters {
+  display: none;
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 15px;
+  margin: 20px;
+}
+
+.filters.active {
+  display: block;
+}
+
+.filter-title {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-option {
+  padding: 8px 16px;
+  background: #3a3a3a;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-option:hover {
+  background: #4a4a4a;
+}
+
+.filter-option.active {
+  background: var(--card-blue);
+}
+
+.case-examples {
+  margin-top: 20px;
+}
+
+.case-example {
+  background: #2a2a2a;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.case-title {
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.case-description {
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.case-result {
+  color: var(--card-green);
+  margin-top: 10px;
+}
+
+.add-signature {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 15px;
+}
+
+.signature-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.signature-form input,
+.signature-form textarea {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #3a3a3a;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.signature-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.signature-form button {
+  padding: 12px 24px;
+  background: var(--card-blue);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.signature-form button:hover {
+  background: #5d89ff;
+  transform: translateY(-2px);
+}
+
+.type-indicator {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 8px;
+}
+
+.name[data-type="supporter"] .type-indicator {
+  background: var(--card-blue);
+}
+
+.name[data-type="ongoing"] .type-indicator {
+  background: var(--card-yellow);
+}
+
+.name[data-type="succeeded"] .type-indicator {
+  background: var(--card-green);
+}
+
+.stat-box {
+  background: #3a3a3a;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  background: #4a4a4a;
+}
+
+.page-header {
+  text-align: center;
+  margin: 30px 0;
+  padding: 20px;
+  background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+  border-radius: 15px;
+}
+
+.page-header h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  background: linear-gradient(45deg, var(--card-blue), var(--card-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-header p {
+  color: #aaa;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin: 30px 0 20px;
+  padding-left: 15px;
+  border-left: 4px solid var(--card-blue);
+}
+
+.faces-filters {
+  display: flex;
+  gap: 20px;
+  margin: 20px;
+  padding: 15px;
+  background: #2a2a2a;
+  border-radius: 10px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.face-filter {
+  padding: 8px 12px;
+  background: #3a3a3a;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.success-stories-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 20px;
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 10px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 15px;
+  background: #3a3a3a;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--card-blue);
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  color: #aaa;
+}
+
+.signatures-filters {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  background: #3a3a3a;
+  border: none;
+  border-radius: 20px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+  background: var(--card-blue);
+}
+
+.signature-intro {
+  color: #aaa;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+.signature-form button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.button-icon {
+  font-size: 1.2rem;
+}
+
+.assessment-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.assessment-tool, .faq-section {
+  background: #2a2a2a;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.assessment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.assessment-form .form-group {
+  margin-bottom: 15px;
+}
+
+.assessment-form select, 
+.assessment-form input[type="radio"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #3a3a3a;
+  color: var(--text-color);
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.assessment-result {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #3a3a3a;
+}
+
+.accordion-item {
+  margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.accordion-header {
+  background: #3a3a3a;
+  padding: 15px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.accordion-content {
+  background: #3a3a3a;
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.accordion-item.active .accordion-content {
+  padding: 15px;
+  max-height: 500px;
+}
+
+.left-menu {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.menu-toggle {
+  width: 40px;
+  height: 40px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+  color: var(--text-color);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+  background: #3a3a3a;
+  transform: scale(1.05);
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 10px;
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 10px 0;
+  min-width: 200px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.left-menu.active .menu-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu-header {
+  padding: 10px 20px;
+  color: var(--text-color);
+  font-weight: bold;
+  border-bottom: 1px solid #3a3a3a;
+  margin-bottom: 5px;
+}
+
+.menu-item {
+  display: block;
+  padding: 10px 20px;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+  background: #3a3a3a;
+  padding-left: 25px;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: var(--text-color);
+  text-align: center;
+  margin: 30px 0;
+  padding: 20px;
+  background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+  border-radius: 15px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.community-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section-header {
+  font-size: 1.8rem;
+  margin: 30px 0 20px;
+  padding-left: 15px;
+  border-left: 4px solid var(--card-blue);
+  color: var(--text-color);
+}
+
+.topic-card {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.topic-card:hover {
+  transform: translateY(-5px);
+}
+
+.topic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.topic-tag {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
+
+.topic-tag.social { background: var(--card-red); }
+.topic-tag.labor { background: var(--card-blue); }
+.topic-tag.consumer { background: var(--card-green); }
+.topic-tag.personal { background: var(--card-yellow); }
+
+.topic-stats {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.topic-title {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin: 10px 0;
+}
+
+.topic-preview {
+  color: #aaa;
+  margin-bottom: 15px;
+}
+
+.topic-footer {
+  display: flex;
+  justify-content: space-between;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.experience-card {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.experience-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.experience-type {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+.qa-card {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.qa-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.vote-up, .vote-down {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.vote-up:hover { color: var(--card-green); }
+.vote-down:hover { color: var(--card-red); }
+
+.qa-title {
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.qa-meta {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.like-btn, .share-btn {
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+  background: #3a3a3a;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.like-btn:hover, .share-btn:hover {
+  background: #4a4a4a;
+}
+
+.social-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+.group-card {
+  background: #2a2a2a;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.group-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.group-icon {
+  margin: 0 auto 20px;
+  width: 48px;
+  height: 48px;
+}
+
+.group-title {
+  font-size: 1.4rem;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.group-desc {
+  color: #aaa;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.qr-code-container {
+  background: #3a3a3a;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.qr-code-wrapper {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  background: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.join-group-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.join-group-btn.wechat {
+  background: #07C160;
+}
+
+.join-group-btn.feishu {
+  background: #3370FF;
+}
+
+.join-group-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.button-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.join-group-btn:hover .button-icon {
+  transform: translateX(5px);
+}
+
+/* New styles for homepage specific elements */
+.intro-banner {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  padding: 40px 20px;
+  margin: 20px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.intro-title {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, var(--card-blue), var(--card-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.intro-subtitle {
+  color: #aaa;
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 20px;
+  padding: 20px;
+}
+
+.stat-item {
+  background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.latest-successes {
+  padding: 20px;
+  margin: 20px;
+  background: #2a2a2a;
+  border-radius: 15px;
+}
+
+.success-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.success-card {
+  background: #3a3a3a;
+  padding: 20px;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.featured-services {
+  padding: 40px 20px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.service-card {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  padding: 30px;
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+}
+
+.service-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.service-card h3 {
+  font-size: 1.4rem;
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+
+.service-card p {
+  color: #aaa;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.service-card ul {
+  list-style: none;
+  padding: 0;
+  color: #888;
+}
+
+.service-card ul li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.service-card ul li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--card-blue);
+}
+
+.success-stories {
+  padding: 40px 20px;
+  background: #2a2a2a;
+  margin: 20px;
+  border-radius: 15px;
+}
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.story-card {
+  background: #3a3a3a;
+  padding: 25px;
+  border-radius: 12px;
+  display: flex;
+  gap: 20px;
+  align-items: start;
+  transition: transform 0.3s ease;
+}
+
+.story-card:hover {
+  transform: translateY(-5px);
+}
+
+.story-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.story-content h3 {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.story-content p {
+  color: #aaa;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.story-tags {
+  display: flex;
+  gap: 10px;
+}
+
+.story-tags span {
+  background: #2a2a2a;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.resources-section {
+  padding: 40px 20px;
+}
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.resource-card {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+}
+
+.resource-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.resource-card h3 {
+  font-size: 1.3rem;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.resource-card p {
+  color: #aaa;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.resource-link {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--card-blue);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.resource-link:hover {
+  background: #5d89ff;
+  transform: translateX(5px);
+}
+
+.cta-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.cta-button:hover .button-icon {
+  transform: translateX(5px);
+}
+</style>
+</head>
+<body>
+
+<nav class="left-menu">
+  <div class="menu-toggle">&#x2630;</div>
+  <div class="menu-dropdown">
+    <div class="menu-header">&#x5bfc;&#x822a;&#x83dc;&#x5355;</div>
+    <a href="#home" class="menu-item" data-page="home-page">&#x4e3b;&#x9875;</a>
+    <a href="#faces" class="menu-item" data-page="faces-page">&#x7ef4;&#x6743;&#x6210;&#x529f;&#x8005;&#x5899;</a>
+    <a href="#signatures" class="menu-item" data-page="signatures-page">&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x652f;&#x6301;&#x8005;&#x5899;</a>
+    <a href="#assessment" class="menu-item" data-page="assessment-page">&#x6210;&#x529f;&#x7387;&#x8bc4;&#x4f30;</a>
+    <a href="#community" class="menu-item" data-page="community-page">&#x793e;&#x4f5c;&#x4f01;&#x4e1a;</a>
+    <a href="#templates" class="menu-item" data-page="templates-page">&#x7ef4;&#x6743;&#x6a21;&#x677f;</a>
+  </div>
+</nav>
+
+<nav class="nav-menu" id="navMenu" style="transform: translateX(100%);">
+  <div class="nav-header">
+    <div class="nav-title">Rights Protection Platform</div>
+    <div class="nav-toggle"></div>
+  </div>
+  <div class="nav-content">
+    <div class="nav-links">
+      <a href="#home" class="nav-link" data-page="home-page">Home</a>
+      <a href="#faces" class="nav-link" data-page="faces-page">Wall of Faces</a>
+      <a href="#signatures" class="nav-link" data-page="signatures-page">Wall of Names</a>
+      <a href="#assessment" class="nav-link" data-page="assessment-page">&#x6210;&#x529f;&#x7387;&#x8bc4;&#x4f30;</a>
+      <a href="#community" class="nav-link" data-page="community-page">&#x793e;&#x4f5c;&#x4f01;&#x4e1a;</a>
+      <a href="#templates" class="nav-link" data-page="templates-page">&#x7ef4;&#x6743;&#x6a21;&#x677f;</a>
+    </div>
+  </div>
+</nav>
+
+<div id="home-page" class="page active">
+  <div class="intro-banner">
+    <h1 class="intro-title">&#x6743;&#x5229;&#x7ef4;&#x62a4;&#x52a9;&#x624b;&#x5e73;&#x53f0;</h1>
+    <p class="intro-subtitle">
+      &#x754c;&#x4e1a;&#x7684;&#x7ef4;&#x6743;&#x6307;&#x5bfc;&#xff0c;&#x4e86;&#x754c;&#x7684;&#x6848;&#x4f8b;&#x53c2;&#x8003;&#xff0c;&#x672c;&#x5730;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;&#x6307;&#x5357;&#x3002;&#x6211;&#x4eec;&#x653b;&#x52a8;&#x4e3a;&#x4e00;&#x4e2a;&#x4e00;&#x4e9b;&#x4eba;&#x5e26;&#x6765;&#x52c7;&#x6c14;&#x7684;&#x7ef4;&#x6743;&#x5e73;&#x53f0;&#x3002;
+    </p>
+    <div class="quick-stats">
+      <div class="stat-item">
+        <div class="stat-number" style="color: var(--card-green)">892</div>
+        <div class="stat-label">&#x6210;&#x529f;&#x6848;&#x4f8b;</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" style="color: var(--card-blue)">1,245</div>
+        <div class="stat-label">&#x8fdb;&#x884c;&#x4e2d;</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" style="color: var(--card-yellow)">89%</div>
+        <div class="stat-label">&#x6210;&#x529f;&#x7387;</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="latest-successes">
+    <h2 class="section-title">&#x6700;&#x65e9;&#x7ef4;&#x6743;&#x6210;&#x529f;&#x6848;&#x4f8b;</h2>
+    <div class="success-grid">
+      <div class="success-card">
+        <div class="success-header">
+          <span class="success-tag" style="background: var(--card-red)">&#x793e;&#x4ea4;&#x5a92;&#x4f53;</span>
+          <span class="success-date">2&#x5929;&#x524d;</span>
+        </div>
+        <h3 class="success-title">&#x5fae;&#x535a;&#x8d26;&#x53f7;&#x6210;&#x529f;&#x6062;&#x590d;</h3>
+        <p class="success-desc">&#x901a;&#x8fc7;&#x6b63;&#x5e38;&#x7a0b;&#x5e8f;&#xff0c;&#x6210;&#x529f;&#x6062;&#x590d;&#x8d26;&#x53f7;&#x548c;&#x83b7;&#x5f97;&#x8d54;&#x507f;&#x3002;</p>
+        <div class="compensation">&#x83b7;&#x5f97;&#x8d54;&#x507f;&#xff1a;&#x4e07;&#x5143;</div>
+      </div>
+      <div class="success-card">
+        <div class="success-header">
+          <span class="success-tag" style="background: var(--card-blue)">&#x52b3;&#x52a8;&#x6743;&#x76ca;</span>
+          <span class="success-date">3&#x5929;&#x524d;</span>
+        </div>
+        <h3 class="success-title">&#x52a0;&#x73ed;&#x5de5;&#x8d44;&#x7ea0;&#x7eb7;&#x80dc;&#x8bc9;&#x6848;&#x4f8b;</h3>
+        <p class="success-desc">&#x901a;&#x8fc7;&#x6b63;&#x5e38;&#x7a0b;&#x5e8f;&#xff0c;&#x6210;&#x529f;&#x8bc1;&#x660e;&#x8d85;&#x65f6;&#x52a0;&#x73ed;&#x4e8b;&#x5b9e;&#x3002;</p>
+        <div class="compensation">&#x83b7;&#x5f97;&#x8d54;&#x507f;&#xff1a;5&#x4e07;&#x5143;</div>
+      </div>
+      <div class="success-card">
+        <div class="success-header">
+          <span class="success-tag" style="background: var(--card-green)">&#x6d88;&#x8d39;&#x8005;&#x6743;&#x76ca;</span>
+          <span class="success-date">5&#x5929;&#x524d;</span>
+        </div>
+        <h3 class="success-title">&#x624b;&#x673a;&#x8d28;&#x91cf;&#x95ee;&#x9898;&#x9000;&#x6b3e;&#x6848;&#x4f8b;</h3>
+        <p class="success-desc">&#x901a;&#x8fc7;&#x6d88;&#x8d39;&#x8005;&#x534f;&#x4f1a;&#x8c03;&#x89e3;&#xff0c;&#x5fc5;&#x8981;&#x65f6;&#x5bfb;&#x6c42;&#x6cd5;&#x5f8b;&#x54a8;&#x8be2;</p>
+        <div class="compensation">&#x83b7;&#x5f97;&#x8d54;&#x507f;&#xff1a;2000&#x5143;</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="featured-services">
+    <h2 class="section-title">&#x7eff;&#x7528;&#x7ef4;&#x6743;&#x670d;&#x52a1;</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">&#x2696;&#xfe0f;</div>
+        <h3>&#x6cd5;&#x5f8b;&#x6307;&#x5bfc;</h3>
+        <p>&#x4f18;&#x5bb6;&#x7684;&#x6cd5;&#x5f8b;&#x6307;&#x5bfc;&#x548c;&#x7ef4;&#x6743;&#x53c2;&#x8003;</p>
+        <ul>
+          <li>&#x4e13;&#x4e1a;&#x7684;&#x6cd5;&#x5f8b;&#x6307;&#x5bfc;</li>
+          <li>&#x76f8;&#x4f3c;&#x6848;&#x4f8b;&#x53c2;&#x8003;</li>
+          <li>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;</li>
+          <li>&#x7ef4;&#x6743;&#x5168;&#x7a0b;&#x8ddf;&#x8e2a;</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">&#x2705;</div>
+        <h3>&#x6587;&#x4ef6;&#x6a21;&#x677f;</h3>
+        <p>&#x4e00;&#x4e9b;&#x7ef4;&#x6743;&#x6587;&#x4ef6;&#x6a21;&#x677f;</p>
+        <ul>
+          <li>&#x7ef4;&#x6743;&#x7ef4;&#x62a4;&#x6a21;&#x677f;</li>
+          <li>&#x8d26;&#x53f7;&#x6062;&#x590d;&#x6a21;&#x677f;</li>
+          <li>&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x6a21;&#x677f;</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">&#x231a;</div>
+        <h3>&#x8bc1;&#x636e;&#x6536;&#x96c7;</h3>
+        <p>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;&#x6307;&#x5357;</p>
+        <ul>
+          <li>&#x8bc1;&#x636e;&#x6536;&#x96c7;&#x6307;&#x5357;</li>
+          <li>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x7ba1;&#x7406;</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-stories">
+    <h2 class="section-title">&#x7ef4;&#x6743;&#x6210;&#x529f;&#x95ee;&#x9898;</h2>
+    <div class="stories-grid">
+      <div class="story-card">
+        <img src="https://api.dicebear.com/6.x/avataaars/svg?seed=story1" alt="user avatar" class="story-avatar">
+        <div class="story-content">
+          <h3>&#x7ef4;&#x6743;&#x6210;&#x529f;&#x8005;&#x7684;&#x6545;&#x4e8b;</h3>
+          <p>&#x901a;&#x8fc7;&#x7ef4;&#x6743;&#x7a0b;&#x5e8f;&#xff0c;&#x6210;&#x529f;&#x7ef4;&#x6743;</p>
+          <div class="story-tags">
+            <span>&#x793e;&#x4ea4;&#x5a92;&#x4f53;</span>
+            <span>&#x8d26;&#x53f7;&#x6062;&#x590d;</span>
+          </div>
+        </div>
+      </div>
+      <div class="story-card">
+        <img src="https://api.dicebear.com/6.x/avataaars/svg?seed=story2" alt="user avatar" class="story-avatar">
+        <div class="story-content">
+          <h3>&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x7ef4;&#x6743;&#x7684;&#x6545;&#x4e8b;</h3>
+          <p>&#x901a;&#x8fc7;&#x6cd5;&#x5f8b;&#x63f4;&#x52a9;&#xff0c;&#x6210;&#x529f;&#x7ef4;&#x6743;</p>
+          <div class="story-tags">
+            <span>&#x52b3;&#x52a8;&#x6743;&#x76ca;</span>
+            <span>&#x52b3;&#x8d44;&#x62d6;&#x6b20;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="resources-section">
+    <h2 class="section-title">&#x7ef4;&#x6743;&#x8d44;&#x6e90;&#x4e2d;&#x5fc3;</h2>
+    <div class="resources-grid">
+      <div class="resource-card">
+        <div class="resource-icon">&#x1f4d5;</div>
+        <h3>&#x7ef4;&#x6743;&#x6587;&#x4ef6;</h3>
+        <p>&#x7ef4;&#x6743;&#x6587;&#x4ef6;&#x6a21;&#x677f;</p>
+        <a href="#templates" class="resource-link" data-page="templates-page">&#x4e0b;&#x8f7d;&#x6a21;&#x677f;</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">&#x2705;</div>
+        <h3>&#x8bc1;&#x636e;&#x6536;&#x96c7;</h3>
+        <p>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;</p>
+        <a href="#" class="resource-link">&#x8bb0;&#x5f55;&#x8bc1;&#x636e;</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">&#x231a;</div>
+        <h3>&#x7ef4;&#x6743;&#x5168;&#x7a0b;</h3>
+        <p>&#x7ef4;&#x6743;&#x5168;&#x7a0b;&#x8ddf;&#x8e2a;</p>
+        <a href="#" class="resource-link">&#x4e0d;&#x660e;</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">&#x1f4f1;</div>
+        <h3>&#x7ef4;&#x6743;&#x5e73;&#x53f0;</h3>
+        <p>&#x7ef4;&#x6743;&#x5e73;&#x53f0;&#x63d0;&#x4f9b;</p>
+        <a href="#" class="resource-link">&#x4e0d;&#x660e;</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="cta-section" style="
+    padding: 40px 20px;
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    margin: 20px;
+    border-radius: 15px;
+  ">
+    <h2 class="section-title" style="
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      background: linear-gradient(45deg, var(--card-blue), var(--card-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    ">开始你的维权行动</h2>
+
+    <div class="cta-grid" style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    ">
+      <div class="cta-card" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      ">
+        <div style="font-size: 3rem; margin-bottom: 20px;">📝</div>
+        <h3 style="
+          font-size: 1.5rem;
+          color: var(--text-color);
+          margin-bottom: 15px;
+        ">下载维权模板</h3>
+        <p style="
+          color: #aaa;
+          margin-bottom: 25px;
+          line-height: 1.6;
+        ">获取专业的维权文件模板，包含各类案件的标准程序和文书格式，助你事半功倍。</p>
+        <a href="#templates" class="cta-button" data-page="templates-page" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 25px;
+          background: var(--card-blue);
+          color: white;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        ">
+          立即获取模板 <span class="button-icon" style="transition: transform 0.3s;">→</span>
+        </a>
+      </div>
+
+      <div class="cta-card" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      ">
+        <div style="font-size: 3rem; margin-bottom: 20px;">👥</div>
+        <h3 style="
+          font-size: 1.5rem;
+          color: var(--text-color);
+          margin-bottom: 15px;
+        ">加入维权社群</h3>
+        <p style="
+          color: #aaa;
+          margin-bottom: 25px;
+          line-height: 1.6;
+        ">与其他维权同行交流经验，获取最新资讯和专业建议，互帮互助共同进步。</p>
+        <a href="#community" class="cta-button" data-page="community-page" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 25px;
+          background: var(--card-green);
+          color: white;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        ">
+          立即加入社群 <span class="button-icon" style="transition: transform 0.3s;">→</span>
+        </a>
+      </div>
+
+      <div class="cta-card" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      ">
+        <div style="font-size: 3rem; margin-bottom: 20px;">📊</div>
+        <h3 style="
+          font-size: 1.5rem;
+          color: var(--text-color);
+          margin-bottom: 15px;
+        ">评估成功率</h3>
+        <p style="
+          color: #aaa;
+          margin-bottom: 25px;
+          line-height: 1.6;
+        ">快速评估您的维权案例成功率，获取个性化建议和专业指导，提高维权效率。</p>
+        <a href="#assessment" class="cta-button" data-page="assessment-page" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 25px;
+          background: var(--card-yellow);
+          color: white;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        ">
+          开始评估 <span class="button-icon" style="transition: transform 0.3s;">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="faces-page" class="page">
+  <h1 class="page-title">&#x7ef4;&#x6743;&#x6210;&#x529f;&#x8005;&#x5899;</h1>
+  <div class="page-header">
+    <h2>&#x7ef4;&#x6743;&#x6210;&#x529f;&#x8005;&#x5899;</h2>
+    <p>&#x5728;&#x8fd9;&#x91cc;&#xff0c;&#x6211;&#x4eec;&#x5c55;&#x793a;&#x4e86;&#x6240;&#x6709;&#x901a;&#x8fc7;&#x6b63;&#x5e38;&#x7a0b;&#x5e8f;&#x6210;&#x529f;&#x7ef4;&#x6743;&#x7684;&#x81ea;&#x6211;&#x6743;&#x5229;&#x4fdd;&#x62a4;&#x8005;&#x3002;&#x4ed6;&#x4eec;&#x7684;&#x6545;&#x4e8b;&#x5c06;&#x6fc0;&#x52b1;&#x66f4;&#x591a;&#x7684;&#x4eba;&#x7ad9;&#x51fa;&#x6765;&#xff0c;&#x4f7f;&#x7528;&#x6cd5;&#x5f8b;&#x6b66;&#x5668;&#x4fdd;&#x62a4;&#x81ea;&#x5df1;&#x7684;&#x6743;&#x5229;&#x3002;</p>
+  </div>
+  
+  <div class="faces-filters">
+    <div class="filter-group">
+      <label>&#x6309;&#x7167;&#x7c7b;&#x578b;&#x7b5b;&#x9009;</label>
+      <select id="faceTypeFilter" class="face-filter">
+        <option value="all">&#x5168;&#x90e8;&#x7c7b;&#x578b;</option>
+        <option value="social">&#x793e;&#x4ea4;&#x5a92;&#x4f53;</option>
+        <option value="labor">&#x52b3;&#x52a8;&#x6743;&#x76ca;</option>
+        <option value="consumer">&#x6d88;&#x8d39;&#x8005;&#x6743;&#x76ca;</option>
+        <option value="personal">&#x4e2a;&#x4eba;&#x4fe1;&#x606f;</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>&#x65f6;&#x95f4;&#x7b5b;&#x9009;</label>
+      <select id="faceTimeFilter" class="face-filter">
+        <option value="all">&#x5168;&#x90e8;&#x65f6;&#x95f4;</option>
+        <option value="week">&#x6700;&#x8fd1;&#x4e00;&#x5468;</option>
+        <option value="month">&#x6700;&#x8fd1;&#x4e00;&#x4e2a;&#x6708;</option>
+        <option value="quarter">&#x6700;&#x8fd1;&#x4e09;&#x4e2a;&#x6708;</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="success-stories-stats">
+    <div class="stat-item">
+      <div class="stat-number" id="totalSuccesses">892</div>
+      <div class="stat-label">&#x603b;&#x6210;&#x529f;&#x6848;&#x4f8b;</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="weeklySuccesses">47</div>
+      <div class="stat-label">&#x672c;&#x5468;&#x65b0;&#x589e;</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="avgDuration">32&#x5929;</div>
+      <div class="stat-label">&#x5e73;&#x5747;&#x7ef4;&#x6743;&#x5468;&#x671f;</div>
+    </div>
+  </div>
+
+  <button class="load-profiles" id="loadProfiles">&#x52a0;&#x8f7d;&#x66f4;&#x591a;&#x6210;&#x529f;&#x6848;&#x4f8b;</button>
+  <div class="wall" id="faces"></div>
+  
+  <div id="faces-stats-banner" style="
+    background: #2a2a2a;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 15px;
+    text-align: center;
+  ">
+    <h3 style="margin-bottom: 15px; font-size: 1.8rem; background: linear-gradient(45deg, var(--card-blue), var(--card-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      &#x7ef4;&#x6743;&#x8fdb;&#x5c55;&#x7edf;&#x8ba1;
+    </h3>
+    <div style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+      padding: 20px;
+    ">
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-green); margin-bottom: 10px;">892</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x6848;&#x4f8b;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-blue); margin-bottom: 10px;">1,245</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x8fdb;&#x884c;&#x4e2d;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-yellow); margin-bottom: 10px;">89%</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x7387;</div>
+      </div>
+    </div>
+    
+    <div style="
+      background: #3a3a3a;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+    ">
+      <h4 style="margin-bottom: 15px;">&#x7ed9;&#x72b9;&#x8c6b;&#x4e2d;&#x7684;&#x4f60;</h4> 
+      <div style="color: #aaa; line-height: 1.6;">
+        <p>&#x6bcf;&#x4e01;&#x4e2a;&#x6210;&#x529f;&#x7684;&#x7ef4;&#x6743;&#x6848;&#x4f8b;&#x90fd;&#x59cb;&#x4e8e;&#x7b2c;&#x4e00;&#x6b65;&#x884c;&#x52a8;&#x3002;&#x6570;&#x636e;&#x663e;&#x793a;&#xff0c;89%&#x7684;&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x90fd;&#x53d6;&#x5f97;&#x4e86;&#x4e0d;&#x540c;&#x7a0b;&#x5ea6;&#x7684;&#x6210;&#x529f;&#x3002;&#x65e0;&#x8bba;&#x662f;&#x8d26;&#x53f7;&#x6062;&#x590d;&#x3001;&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x3001;&#x6d88;&#x8d39;&#x7ea0;&#x7eb7;&#x8fd8;&#x662f;&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x4fdd;&#x62a4;&#xff0c;&#x6cd5;&#x5f8b;&#x90fd;&#x8d4b;&#x4e88;&#x4e86;&#x6211;&#x4eec;&#x660e;&#x786e;&#x7684;&#x6743;&#x5229;&#x3002;</p>
+        <p>&#x6211;&#x4eec;&#x7684;&#x5e73;&#x53f0;&#x63d0;&#x4f9b;&#xff1a;</p>
+        <ul>
+          <li>&#x4e13;&#x4e1a;&#x7684;&#x6cd5;&#x5f8b;&#x6307;&#x5bfc;</li>
+          <li>&#x76f8;&#x4f3c;&#x6848;&#x4f8b;&#x53c2;&#x8003;</li>
+          <li>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;</li>
+          <li>&#x7ef4;&#x6743;&#x5168;&#x7a0b;&#x8ddf;&#x8e2a;</li>
+        </ul>
+        <p style="color: var(--card-green)">&#x73b0;&#x5728;&#x5c31;&#x5f00;&#x59cb;&#x884c;&#x52a8;&#xff0c;&#x4e3a;&#x81ea;&#x5df1;&#x7684;&#x6743;&#x76ca;&#x53d1;&#x58f0;&#xff01;</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="signatures-page" class="page">
+  <h1 class="page-title">&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x652f;&#x6301;&#x8005;&#x5899;</h1>
+  <div class="page-header">
+    <h2>&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x652f;&#x6301;&#x8005;&#x5899;</h2>
+    <p>&#x5728;&#x8fd9;&#x91cc;&#xff0c;&#x6211;&#x4eec;&#x8bb0;&#x5f55;&#x4e86;&#x6bcf;&#x4e01;&#x4f4d;&#x53c2;&#x4e0e;&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x7684;&#x652f;&#x6301;&#x8005;&#x3002;&#x65e0;&#x8bba;&#x662f;&#x6b63;&#x5728;&#x8fdb;&#x884c;&#x7ef4;&#x6743;&#x3001;&#x5df2;&#x7ecf;&#x6210;&#x529f;&#x7ef4;&#x6743;&#x8fd8;&#x662f;&#x5bf9;&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x8868;&#x793a;&#x652f;&#x6301;&#xff0c;&#x6bcf;&#x4e01;&#x4f4d;&#x90fd;&#x4e3a;&#x7ef4;&#x62a4;&#x6743;&#x5229;&#x505a;&#x51fa;&#x4e86;&#x8d21;&#x732e;&#x3002;</p>
+  </div>
+  
+  <div class="add-signature">
+    <h3>&#x52a0;&#x5165;&#x652f;&#x6301;&#x8005;&#x884c;&#x5217;</h3>
+    <p class="signature-intro">&#x60a8;&#x7684;&#x7b7e;&#x540d;&#x5c06;&#x7ed9;&#x66f4;&#x591a;&#x7684;&#x4eba;&#x5e26;&#x6765;&#x52c7;&#x6c14;&#xff0c;&#x4f7f;&#x7528;&#x6cd5;&#x5f8b;&#x6b66;&#x5668;&#x4fdd;&#x62a4;&#x81ea;&#x5df1;&#x7684;&#x6743;&#x5229;&#x3002;</p>
+    <form id="signatureForm" class="signature-form">
+      <div class="form-group">
+        <label>&#x60a8;&#x7684;&#x540d;&#x5b57;</label>
+        <input type="text" id="signatureName" required placeholder="&#x8bf7;&#x8f93;&#x5165;&#x60a8;&#x7684;&#x540d;&#x5b57;&#xff08;&#x53ef;&#x4ee5;&#x4f7f;&#x7528;&#x5316;&#x540d;&#xff09;">
+      </div>
+      
+      <div class="form-group">
+        <label>&#x60a8;&#x7684;&#x8eab;&#x4efd;</label>
+        <select id="signatureType">
+          <option value="supporter">&#x652f;&#x6301;&#x8005; - &#x6211;&#x652f;&#x6301;&#x7ef4;&#x6743;&#x884c;&#x52a8;</option>
+          <option value="ongoing">&#x7ef4;&#x6743;&#x4e2d; - &#x6211;&#x6b63;&#x5728;&#x8fdb;&#x884c;&#x7ef4;&#x6743;</option>
+          <option value="succeeded">&#x5df2;&#x6210;&#x529f; - &#x6211;&#x5df2;&#x6210;&#x529f;&#x7ef4;&#x6743;</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>&#x60a8;&#x7684;&#x5bc4;&#x8bed;&#xff08;&#x9009;&#x586b;&#xff09;</label>
+        <textarea id="signatureMessage" placeholder="&#x5206;&#x4eab;&#x60a8;&#x7684;&#x60f3;&#x6cd5;&#x3001;&#x7ecf;&#x5386;&#x6216;&#x7ed9;&#x4ed6;&#x4eba;&#x7684;&#x5efa;&#x8bae;&#x548c;&#x9f13;&#x52b1;"></textarea>
+      </div>
+      
+      <button type="submit">
+        <span>&#x6dfb;&#x52a0;&#x6211;&#x7684;&#x7b7e;&#x540d;</span>
+        <span class="button-icon">&#x270d;&#xfe0f;</span>
+      </button>
+    </form>
+  </div>
+  
+  <div class="signatures-wall">
+    <div class="section-title">&#x652f;&#x6301;&#x8005;&#x7b7e;&#x540d;&#x5899;</div>
+    <div class="names-wall" id="names"></div>
+  </div>
+  
+  <div id="signatures-stats-banner" style="
+    background: #2a2a2a;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 15px;
+    text-align: center;
+  ">
+    <h3 style="margin-bottom: 15px; font-size: 1.8rem; background: linear-gradient(45deg, var(--card-blue), var(--card-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      &#x7ef4;&#x6743;&#x8fdb;&#x5c55;&#x7edf;&#x8ba1;
+    </h3>
+    <div style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+      padding: 20px;
+    ">
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-green); margin-bottom: 10px;">892</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x6848;&#x4f8b;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-blue); margin-bottom: 10px;">1,245</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x8fdb;&#x884c;&#x4e2d;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-yellow); margin-bottom: 10px;">89%</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x7387;</div>
+      </div>
+    </div>
+    
+    <div style="
+      background: #3a3a3a;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+    ">
+      <h4 style="margin-bottom: 15px;">&#x7ed9;&#x72b9;&#x8c6b;&#x4e2d;&#x7684;&#x4f60;</h4> 
+      <div style="color: #aaa; line-height: 1.6;">
+        <p>&#x6bcf;&#x4e01;&#x4e2a;&#x6210;&#x529f;&#x7684;&#x7ef4;&#x6743;&#x6848;&#x4f8b;&#x90fd;&#x59cb;&#x4e8e;&#x7b2c;&#x4e00;&#x6b65;&#x884c;&#x52a8;&#x3002;&#x6570;&#x636e;&#x663e;&#x793a;&#xff0c;89%&#x7684;&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x90fd;&#x53d6;&#x5f97;&#x4e86;&#x4e0d;&#x540c;&#x7a0b;&#x5ea6;&#x7684;&#x6210;&#x529f;&#x3002;&#x65e0;&#x8bba;&#x662f;&#x8d26;&#x53f7;&#x6062;&#x590d;&#x3001;&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x3001;&#x6d88;&#x8d39;&#x7ea0;&#x7eb7;&#x8fd8;&#x662f;&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x4fdd;&#x62a4;&#xff0c;&#x6cd5;&#x5f8b;&#x90fd;&#x8d4b;&#x4e88;&#x4e86;&#x6211;&#x4eec;&#x660e;&#x786e;&#x7684;&#x6743;&#x5229;&#x3002;</p>
+        <p>&#x6211;&#x4eec;&#x7684;&#x5e73;&#x53f0;&#x63d0;&#x4f9b;&#xff1a;</p>
+        <ul>
+          <li>&#x4e13;&#x4e1a;&#x7684;&#x6cd5;&#x5f8b;&#x6307;&#x5bfc;</li>
+          <li>&#x76f8;&#x4f3c;&#x6848;&#x4f8b;&#x53c2;&#x8003;</li>
+          <li>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;</li>
+          <li>&#x7ef4;&#x6743;&#x5168;&#x7a0b;&#x8ddf;&#x8e2a;</li>
+        </ul>
+        <p style="color: var(--card-green)">&#x73b0;&#x5728;&#x5c31;&#x5f00;&#x59cb;&#x884c;&#x52a8;&#xff0c;&#x4e3a;&#x81ea;&#x5df1;&#x7684;&#x6743;&#x76ca;&#x53d1;&#x58f0;&#xff01;</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="assessment-page" class="page">
+  <h1 class="page-title">&#x7ef4;&#x6743;&#x6210;&#x529f;&#x7387;&#x8bc4;&#x4f30;</h1>
+  <div class="page-header">
+    <h2>&#x7ef4;&#x6743;&#x6210;&#x529f;&#x7387;&#x8bc4;&#x4f30;</h2>
+    <p>&#x901a;&#x8fc7;&#x79d1;&#x5b66;&#x7684;&#x8bc4;&#x4f30;&#x65b9;&#x6cd5;&#xff0c;&#x6211;&#x4eec;&#x53ef;&#x4ee5;&#x9884;&#x4f30;&#x60a8;&#x7684;&#x7ef4;&#x6743;&#x6848;&#x4f8b;&#x6210;&#x529f;&#x7387;&#xff0c;&#x5e76;&#x63d0;&#x4f9b;&#x76f8;&#x5e94;&#x7684;&#x5efa;&#x8bae;&#x548c;&#x6307;&#x5bfc;&#x3002;</p>
+  </div>
+
+  <div class="assessment-container">
+    <div class="assessment-tool">
+      <h3>&#x5feb;&#x901f;&#x8bc4;&#x4f30;&#x5de5;&#x5177;</h3>
+      <form id="assessmentForm" class="assessment-form">
+        <div class="form-group">
+          <label>&#x7ef4;&#x6743;&#x7c7b;&#x578b;</label>
+          <select required>
+            <option value>&#x8bf7;&#x9009;&#x62e9;&#x7ef4;&#x6743;&#x7c7b;&#x578b;</option>
+            <option value="social">&#x793e;&#x4ea4;&#x5a92;&#x4f53;&#x8d26;&#x53f7;&#x6062;&#x590d;</option>
+            <option value="labor">&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x7ef4;&#x62a4;</option>
+            <option value="consumer">&#x6d88;&#x8d39;&#x8005;&#x6743;&#x76ca;&#x7ef4;&#x62a4;</option>
+            <option value="personal">&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x4fdd;&#x62a4;</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>&#x662f;&#x5426;&#x5728;&#x6cd5;&#x5f8b;&#x89c4;&#x5b9a;&#x7684;&#x65f6;&#x6548;&#x5185;</label>
+          <div class="radio-group">
+            <input type="radio" name="timeLimit" id="timeLimitYes">
+            <label for="timeLimitYes">&#x662f;</label>
+            <input type="radio" name="timeLimit" id="timeLimitNo">
+            <label for="timeLimitNo">&#x5426;</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>&#x662f;&#x5426;&#x6709;&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;</label>
+          <div class="radio-group">
+            <input type="radio" name="evidence" id="evidenceYes">
+            <label for="evidenceYes">&#x662f;</label>
+            <input type="radio" name="evidence" id="evidenceNo">
+            <label for="evidenceNo">&#x5426;</label>
+          </div>
+        </div>
+
+        <button type="submit">&#x83b7;&#x53d6;&#x8bc4;&#x4f30;&#x7ed3;&#x679c;</button>
+      </form>
+
+      <div id="assessmentResult" class="assessment-result" style="display: none;">
+        <h4>&#x8bc4;&#x4f30;&#x7ed3;&#x679c;</h4>
+        <div class="result-content"></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h3>&#x5e38;&#x89c1;&#x95ee;&#x9898;&#x89e3;&#x7b54;</h3>
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header">&#x8bc1;&#x636e;&#x6536;&#x96c7;&#x6307;&#x5357;</div>
+          <div class="accordion-content">
+            <ul>
+              <li>&#x4fdd;&#x7559;&#x6240;&#x6709;&#x76f8;&#x5173;&#x7684;&#x8bb0;&#x5f55;&#x548c;&#x8bc1;&#x636e;</li>
+              <li>&#x62cd;&#x6444;&#x6216;&#x8bb0;&#x5f55;&#x73b0;&#x573a;&#x7167;&#x7247;&#x6216;&#x89c6;&#x9891;</li>
+              <li>&#x4fdd;&#x5b58;&#x6240;&#x6709;&#x76f8;&#x5173;&#x6587;&#x4ef6;&#x548c;&#x5408;&#x540c;</li>
+              <li>&#x8bb0;&#x5f55;&#x6240;&#x6709;&#x4e0e;&#x6848;&#x4ef6;&#x76f8;&#x5173;&#x7684;&#x5bf9;&#x8bdd;&#x548c;&#x901a;&#x8baf;</li>
+              <li>&#x8bb0;&#x5f55;&#x6848;&#x4ef6;&#x53d1;&#x751f;&#x7684;&#x65f6;&#x95f4;&#x548c;&#x5730;&#x70b9;</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">&#x7ef4;&#x6743;&#x65f6;&#x6548;&#x8bf4;&#x660e;</div>
+          <div class="accordion-content">
+            <ul>
+              <li>&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x7ea0;&#x7eb7;&#xff1a;&#x4e8b;&#x4ef6;&#x53d1;&#x751f;&#x540e;1&#x5e74;&#x5185;</li>
+              <li>&#x6d88;&#x8d39;&#x8005;&#x6743;&#x76ca;&#x7ef4;&#x62a4;&#xff1a;&#x77e4;&#x9053;&#x6216;&#x5e94;&#x5f53;&#x77e4;&#x9053;&#x6743;&#x5229;&#x88ab;&#x4fb5;&#x72af;&#x4e4b;&#x65e5;&#x8d77;3&#x5e74;&#x5181;</li>
+              <li>&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x4fdd;&#x62a4;&#xff1a;&#x77e4;&#x9053;&#x6216;&#x5e94;&#x5f53;&#x77e4;&#x9053;&#x6743;&#x5229;&#x88ab;&#x4fb5;&#x72af;&#x4e4b;&#x65e5;&#x8d77;3&#x5e74;&#x5181;</li>
+              <li>&#x5408;&#x540c;&#x7ea0;&#x7eb7;&#xff1a;&#x5408;&#x540c;&#x751f;&#x6548;&#x540e;3&#x5e74;&#x5181;</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">&#x7ef4;&#x6743;&#x6d41;&#x7a0b;&#x6307;&#x5357;</div>
+          <div class="accordion-content">
+            <ol>
+              <li>&#x6536;&#x96c7;&#x8bc1;&#x636e;&#x548c;&#x8d44;&#x6599;</li>
+              <li>&#x9009;&#x62e9;&#x5408;&#x9002;&#x7684;&#x7ef4;&#x6743;&#x9014;&#x5f84;</li>
+              <li>&#x51c6;&#x5907;&#x7ef4;&#x6743;&#x7533;&#x8bf7;&#x6750;&#x6599;</li>
+              <li>&#x6309;&#x7167;&#x7a0b;&#x5e8f;&#x63d0;&#x4ea4;&#x7ef4;&#x6743;&#x7533;&#x8bf7;</li>
+              <li>&#x53c2;&#x52a0;&#x7ef4;&#x6743;&#x8fc7;&#x7a0b;&#x548c;&#x5ead;&#x5ba1;</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="assessment-stats-banner" style="
+    background: #2a2a2a;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 15px;
+    text-align: center;
+  ">
+    <h3 style="margin-bottom: 15px; font-size: 1.8rem; background: linear-gradient(45deg, var(--card-blue), var(--card-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      &#x7ef4;&#x6743;&#x8fdb;&#x5c55;&#x7edf;&#x8ba1;
+    </h3>
+    <div style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+      padding: 20px;
+    ">
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-green); margin-bottom: 10px;">892</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x6848;&#x4f8b;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-blue); margin-bottom: 10px;">1,245</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x8fdb;&#x884c;&#x4e2d;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-yellow); margin-bottom: 10px;">89%</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x7387;</div>
+      </div>
+    </div>
+    
+    <div style="
+      background: #3a3a3a;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+    ">
+      <h4 style="margin-bottom: 15px;">&#x7ed9;&#x72b9;&#x8c6b;&#x4e2d;&#x7684;&#x4f60;</h4> 
+      <div style="color: #aaa; line-height: 1.6;">
+        <p>&#x6bcf;&#x4e01;&#x4e2a;&#x6210;&#x529f;&#x7684;&#x7ef4;&#x6743;&#x6848;&#x4f8b;&#x90fd;&#x59cb;&#x4e8e;&#x7b2c;&#x4e00;&#x6b65;&#x884c;&#x52a8;&#x3002;&#x6570;&#x636e;&#x663e;&#x793a;&#xff0c;89%&#x7684;&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x90fd;&#x53d6;&#x5f97;&#x4e86;&#x4e0d;&#x540c;&#x7a0b;&#x5ea6;&#x7684;&#x6210;&#x529f;&#x3002;&#x65e0;&#x8bba;&#x662f;&#x8d26;&#x53f7;&#x6062;&#x590d;&#x3001;&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x3001;&#x6d88;&#x8d39;&#x7ea0;&#x7eb7;&#x8fd8;&#x662f;&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x4fdd;&#x62a4;&#xff0c;&#x6cd5;&#x5f8b;&#x90fd;&#x8d4b;&#x4e88;&#x4e86;&#x6211;&#x4eec;&#x660e;&#x786e;&#x7684;&#x6743;&#x5229;&#x3002;</p>
+        <p>&#x6211;&#x4eec;&#x7684;&#x5e73;&#x53f0;&#x63d0;&#x4f9b;&#xff1a;</p>
+        <ul>
+          <li>&#x4e13;&#x4e1a;&#x7684;&#x6cd5;&#x5f8b;&#x6307;&#x5bfc;</li>
+          <li>&#x76f8;&#x4f3c;&#x6848;&#x4f8b;&#x53c2;&#x8003;</li>
+          <li>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;</li>
+          <li>&#x7ef4;&#x6743;&#x5168;&#x7a0b;&#x8ddf;&#x8e2a;</li>
+        </ul>
+        <p style="color: var(--card-green)">&#x73b0;&#x5728;&#x5c31;&#x5f00;&#x59cb;&#x884c;&#x52a8;&#xff0c;&#x4e3a;&#x81ea;&#x5df1;&#x7684;&#x6743;&#x76ca;&#x53d1;&#x58f0;&#xff01;</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="community-page" class="page">
+  <h1 class="page-title">&#x793e;&#x4f5c;&#x4f01;&#x4e1a;</h1>
+  <div class="page-header">
+    <h2>&#x793e;&#x4f5c;&#x4f01;&#x4e1a;</h2>
+    <p>&#x5728;&#x8fd9;&#x91cc;&#xff0c;&#x6211;&#x4eec;&#x5c55;&#x793a;&#x4e86;&#x4e00;&#x4e9b;&#x7ef4;&#x6743;&#x7684;&#x4f5c;&#x4e1a;&#x548c;&#x4f60;&#x53c2;&#x4e0e;&#x3002;&#x4ed6;&#x4eec;&#x7684;&#x6545;&#x4e8b;&#x5c06;&#x6fc0;&#x52b1;&#x66f4;&#x591a;&#x7684;&#x4eba;&#x7ad9;&#x51fa;&#x6765;&#xff0c;&#x4f7f;&#x7528;&#x6cd5;&#x5f8b;&#x6b66;&#x5668;&#x4fdd;&#x62a4;&#x81ea;&#x5df1;&#x7684;&#x6743;&#x5229;&#x3002;</p>
+  </div>
+  
+  <div class="community-container">
+    <div class="discussion-section">
+      <h3 class="section-header">&#x70b9;&#x8d77;&#x8ba8;&#x8bba;</h3>
+      <div class="topic-list">
+        <div class="topic-card">
+          <div class="topic-header">
+            <span class="topic-tag social">&#x793e;&#x4ea4;&#x5a92;&#x4f53;</span>
+            <span class="topic-stats">
+              <i class="fas fa-comment"></i> 42
+              <i class="fas fa-eye"></i> 238
+            </span>
+          </div>
+          <h4 class="topic-title">&#x5206;&#x4eab;&#xff1a;&#x6211;&#x662f;&#x5982;&#x4f55;&#x6210;&#x529f;&#x89e3;&#x5c01;&#x793e;&#x4ea4;&#x5a92;&#x4f53;&#x8d26;&#x53f7;&#x7684;</h4>
+          <p class="topic-preview">&#x901a;&#x8fc7;&#x5408;&#x7406;&#x6536;&#x96c6;&#x8bc1;&#x636e;&#x548c;&#x6b63;&#x786e;&#x7684;&#x7533;&#x8bc9;&#x6e20;&#x9053;&#xff0c;&#x6700;&#x7ec8;&#x6210;&#x529f;&#x89e3;&#x5c01;&#x8d26;&#x53f7;&#x5e76;&#x83b7;&#x5f97;&#x8865;&#x507f;...</p>
+          <div class="topic-footer">
+            <span class="topic-author">@&#x7ef4;&#x6743;&#x8fbe;&#x4eba;</span>
+            <span class="topic-time">2&#x5c0f;&#x65f6;&#x524d;</span>
+          </div>
+        </div>
+
+        <div class="topic-card">
+          <div class="topic-header">
+            <span class="topic-tag labor">&#x52b3;&#x52a8;&#x6743;&#x76ca;</span>
+            <span class="topic-stats">
+              <i class="fas fa-comment"></i> 56
+              <i class="fas fa-eye"></i> 312
+            </span>
+          </div>
+          <h4 class="topic-title">&#x52b3;&#x52a8;&#x4ef2;&#x88c1;&#x51c6;&#x5907;&#x6750;&#x6599;&#x6e05;&#x5355;&#x5206;&#x4eab;</h4>
+          <p class="topic-preview">&#x6574;&#x7406;&#x4e86;&#x4e00;&#x4efd;&#x5b8c;&#x6574;&#x7684;&#x52b3;&#x52a8;&#x4ef2;&#x88c1;&#x6750;&#x6599;&#x6e05;&#x5355;&#xff0c;&#x5305;&#x62ec;&#x8bc1;&#x636e;&#x6536;&#x96c7;&#x8981;&#x70b9;&#x548c;&#x6ce8;&#x610f;&#x4e8b;&#x9879;...</p>
+          <div class="topic-footer">
+            <span class="topic-author">@&#x6cd5;&#x5f8b;&#x987e;&#x95ee;</span>
+            <span class="topic-time">5&#x5c0f;&#x65f6;&#x524d;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="experience-section">
+      <h3 class="section-header">&#x7ecf;&#x5386;&#x5206;&#x4eab;</h3>
+      <div class="experience-list">
+        <div class="experience-card">
+          <div class="experience-header">
+            <img src="https://api.dicebear.com/6.x/initials/svg?seed=&#x6210;&#x529f;&#x8005;" alt="avatar" class="author-avatar">
+            <div class="author-info">
+              <span class="author-name">&#x7ef4;&#x6743;&#x6210;&#x529f;&#x8005;</span>
+              <span class="experience-type consumer">&#x6d88;&#x8d39;&#x7ef4;&#x6743;</span>
+            </div>
+          </div>
+          <div class="experience-content">
+            <p>&#x5206;&#x4eab;&#x6211;&#x7684;&#x7ef4;&#x6743;&#x7ecf;&#x9a8c;&#xff1a;&#x6536;&#x96c7;&#x8bc1;&#x636e;&#x5f88;&#x91cd;&#x8981;&#xff0c;&#x5efa;&#x8bae;&#x5927;&#x5bb6;...</p>
+          </div>
+          <div class="experience-footer">
+            <button class="like-btn">&#x1f44d; 23</button>
+            <button class="share-btn">&#x5206;&#x4eab;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-section">
+      <h3 class="section-header">&#x4e00;&#x4e0b;&#x95ee;&#x7b54;</h3>
+      <div class="qa-list">
+        <div class="qa-card">
+          <div class="qa-vote">
+            <button class="vote-up">&#x25b2;</button>
+            <span class="vote-count">12</span>
+            <button class="vote-down">&#x25bc;</button>
+          </div>
+          <div class="qa-content">
+            <h4 class="qa-title">&#x5173;&#x4e8e;&#x5de5;&#x8d44;&#x62d6;&#x6b20;&#x95ee;&#x9898;&#x7684;&#x54a8;&#x8be2;</h4>
+            <p class="qa-text">&#x516c;&#x53f8;&#x62d6;&#x6b20;&#x5de5;&#x8d44;&#x4e24;&#x4e2a;&#x6708;&#x4e86;&#xff0c;&#x6211;&#x8be5;&#x5982;&#x4f55;&#x7ef4;&#x6743;&#xff1f;</p>
+            <div class="qa-meta">
+              <span class="qa-answers">5&#x4e2a;&#x56de;&#x7b54;</span>
+              <span class="qa-time">1&#x5929;&#x524d;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="social-groups-section">
+    <h3 class="section-header">&#x52a0;&#x5165;&#x4ea4;&#x6d41;&#x7fa4;</h3>
+    <div class="social-groups">
+      <div class="group-card">
+        <!-- Existing group card content -->
+      </div>
+    </div>
+  </div>
+  
+  <div id="community-stats-banner" style="
+    background: #2a2a2a;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 15px;
+    text-align: center;
+  ">
+    <h3 style="margin-bottom: 15px; font-size: 1.8rem; background: linear-gradient(45deg, var(--card-blue), var(--card-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      &#x7ef4;&#x6743;&#x8fdb;&#x5c55;&#x7edf;&#x8ba1;
+    </h3>
+    <div style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+      padding: 20px;
+    ">
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-green); margin-bottom: 10px;">892</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x6848;&#x4f8b;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-blue); margin-bottom: 10px;">1,245</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x8fdb;&#x884c;&#x4e2d;</div>
+      </div>
+      <div class="stat-box" style="
+        background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+      ">
+        <div style="font-size: 2.5rem; color: var(--card-yellow); margin-bottom: 10px;">89%</div>
+        <div style="color: #aaa; font-size: 1.1rem;">&#x6210;&#x529f;&#x7387;</div>
+      </div>
+    </div>
+    
+    <div style="
+      background: #3a3a3a;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+    ">
+      <h4 style="margin-bottom: 15px;">&#x7ed9;&#x72b9;&#x8c6b;&#x4e2d;&#x7684;&#x4f60;</h4> 
+      <div style="color: #aaa; line-height: 1.6;">
+        <p>&#x6bcf;&#x4e01;&#x4e2a;&#x6210;&#x529f;&#x7684;&#x7ef4;&#x6743;&#x6848;&#x4f8b;&#x90fd;&#x59cb;&#x4e8e;&#x7b2c;&#x4e00;&#x6b65;&#x884c;&#x52a8;&#x3002;&#x6570;&#x636e;&#x663e;&#x793a;&#xff0c;89%&#x7684;&#x7ef4;&#x6743;&#x884c;&#x52a8;&#x90fd;&#x53d6;&#x5f97;&#x4e86;&#x4e0d;&#x540c;&#x7a0b;&#x5ea6;&#x7684;&#x6210;&#x529f;&#x3002;&#x65e0;&#x8bba;&#x662f;&#x8d26;&#x53f7;&#x6062;&#x590d;&#x3001;&#x52b3;&#x52a8;&#x6743;&#x76ca;&#x3001;&#x6d88;&#x8d39;&#x7ea0;&#x7eb7;&#x8fd8;&#x662f;&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x4fdd;&#x62a4;&#xff0c;&#x6cd5;&#x5f8b;&#x90fd;&#x8d4b;&#x4e88;&#x4e86;&#x6211;&#x4eec;&#x660e;&#x786e;&#x7684;&#x6743;&#x5229;&#x3002;</p>
+        <p>&#x6211;&#x4eec;&#x7684;&#x5e73;&#x53f0;&#x63d0;&#x4f9b;&#xff1a;</p>
+        <ul>
+          <li>&#x4e13;&#x4e1a;&#x7684;&#x6cd5;&#x5f8b;&#x6307;&#x5bfc;</li>
+          <li>&#x76f8;&#x4f3c;&#x6848;&#x4f8b;&#x53c2;&#x8003;</li>
+          <li>&#x5b8c;&#x6574;&#x7684;&#x8bc1;&#x636e;&#x6536;&#x96c7;</li>
+          <li>&#x7ef4;&#x6743;&#x5168;&#x7a0b;&#x8ddf;&#x8e2a;</li>
+        </ul>
+        <p style="color: var(--card-green)">&#x73b0;&#x5728;&#x5c31;&#x5f00;&#x59cb;&#x884c;&#x52a8;&#xff0c;&#x4e3a;&#x81ea;&#x5df1;&#x7684;&#x6743;&#x76ca;&#x53d1;&#x58f0;&#xff01;</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="templates-page" class="page">
+  <h1 class="page-title">&#x7ef4;&#x6743;&#x6a21;&#x677f;</h1>
+  <div class="page-header">
+    <h2>&#x7ef4;&#x6743;&#x6a21;&#x677f;</h2>
+    <p>&#x6211;&#x4eec;&#x4e3a;&#x60a8;&#x8bb0;&#x5f55;&#x4e86;&#x4e00;&#x4e9b;&#x7ef4;&#x6743;&#x7684;&#x6a21;&#x677f;&#x3001;&#x5e76;&#x63d0;&#x4f9b;&#x7ef4;&#x6743;&#x7a0b;&#x5e8f;&#x6307;&#x5bfc;</p>
+  </div>
+  
+  <div class="templates-grid">
+    <div class="template-card">
+      <div class="template-header">
+        <div class="template-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#4DFF4D"/>
+            <path d="M8 16H24M16 8V24" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h4 class="template-title">&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x4fdd;&#x62a4;&#x6307;&#x8f7d;&#x7ef4;&#x6743;</h4>
+      </div>
+      <p class="template-desc">&#x9002;&#x7528;&#x4e8e;&#x4e2a;&#x4eba;&#x4fe1;&#x606f;&#x6cc4;&#x9732; &#x7b49;&#x7f51;&#x4e0d;&#x5b89;&#x5168;&#x7b49;&#x60c5;&#x51b5;&#x7684;&#x6307;&#x8f7d;&#x7ef4;&#x6743;&#x3002;</p>
+      <div class="template-actions">
+        <button class="template-btn view">&#x9884;&#x89c8;&#x6a21;&#x677f;</button>
+        <button class="template-btn download">&#x4e0b;&#x8f7d;&#x6a21;&#x677f;</button>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-header">
+        <div class="template-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#FF4D4D"/>
+          <path d="M8 16L13.3333 21.3333L24 10.6667" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h4 class="template-title">&#x8d26;&#x53f7;&#x7533;&#x8bc9;&#x6a21;&#x677f;</h4>
+    </div>
+    <p class="template-desc">&#x9002;&#x7528;&#x4e8e;&#x8d26;&#x53f7;&#x7533;&#x8bc9;&#x7b49;&#x7f51;&#x4e0d;&#x5b89;&#x5168;&#x7b49;&#x60c5;&#x51b5;&#x7684;&#x6307;&#x8f7d;&#x7ef4;&#x6743;&#x3002;</p>
+    <div class="template-actions">
+      <button class="template-btn view">&#x9884;&#x89c8;&#x6a21;&#x677f;</button>
+      <button class="template-btn download">&#x4e0b;&#x8f7d;&#x6a21;&#x677f;</button>
+    </div>
+  </div>
+
+  <div class="template-card">
+    <div class="template-header">
+      <div class="template-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#4B87FF"/>
+          <path d="M8 16L13.3333 21.3333L24 10.6667" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h4 class="template-title">&#x6d88;&#x8d39;&#x6295;&#x8bc9;&#x6a21;&#x677f;</h4>
+    </div>
+    <p class="template-desc">&#x9002;&#x7528;&#x4e8e;&#x6d88;&#x8d39;&#x6295;&#x8bc9;&#x7b49;&#x7f51;&#x4e0d;&#x5b89;&#x5168;&#x7b49;&#x60c5;&#x51b5;&#x7684;&#x6307;&#x8f7d;&#x7ef4;&#x6743;&#x3002;</p>
+    <div class="template-actions">
+      <button class="template-btn view">&#x9884;&#x89c8;&#x6a21;&#x677f;</button>
+      <button class="template-btn download">&#x4e0b;&#x8f7d;&#x6a21;&#x677f;</button>
+    </div>
+  </div>
+
+  <div class="template-card">
+    <div class="template-header">
+      <div class="template-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#FFD24D"/>
+          <path d="M16 8v16M8 16h16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h4 class="template-title">&#x8bc1;&#x636e;&#x6536;&#x96c7;&#x6307;&#x5357;</h4>
+    </div>
+    <p class="template-desc">&#x9002;&#x7528;&#x4e8e;&#x8bc1;&#x636e;&#x6536;&#x96c7;&#x7b49;&#x7f51;&#x4e0d;&#x5b89;&#x5168;&#x7b49;&#x60c5;&#x51b5;&#x7684;&#x6307;&#x8f7d;&#x7ef4;&#x6743;&#x3002;</p>
+    <div class="template-actions">
+      <button class="template-btn view">&#x9884;&#x89c8;&#x6a21;&#x677f;</button>
+      <button class="template-btn download">&#x4e0b;&#x8f7d;&#x6a21;&#x677f;</button>
+    </div>
+  </div>
+
+  <div class="template-card">
+    <div class="template-header">
+      <div class="template-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#4DFF4D"/>
+          <path d="M8 16H24M16 8V24" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h4 class="template-title">&#x793e;&#x4ea4;&#x5a92;&#x4f53;&#x8d26;&#x53f7;&#x7533;&#x8bc9;&#x6a21;&#x677f;</h4>
+    </div>
+    <p class="template-desc">&#x9002;&#x7528;&#x4e8e;&#x793e;&#x4ea4;&#x5a92;&#x4f53;&#x8d26;&#x53f7;&#x7533;&#x8bc9;&#x7b49;&#x7f51;&#x4e0d;&#x5b89;&#x5168;&#x7b49;&#x60c5;&#x51b5;&#x7684;&#x6307;&#x8f7d;&#x7ef4;&#x6743;&#x3002;</p>
+    <div class="template-actions">
+      <button class="template-btn view">&#x9884;&#x89c8;&#x6a21;&#x677f;</button>
+      <button class="template-btn download">&#x4e0b;&#x8f7d;&#x6a21;&#x677f;</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>const navMenu = document.getElementById('navMenu');
+const navToggle = navMenu.querySelector('.nav-toggle');
+const navLinks = document.querySelectorAll('.nav-link');
+const pages = document.querySelectorAll('.page');
+const faces = document.getElementById('faces');
+const namesWall = document.getElementById('names');
+let signatures = [];
+const leftMenu = document.querySelector('.left-menu');
+const menuToggle = document.querySelector('.menu-toggle');
+const menuItems = document.querySelectorAll('.menu-item');
+navToggle.addEventListener('click', () => {
+  navMenu.classList.toggle('open');
+});
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const targetId = link.getAttribute('data-page');
+    if (targetId) {
+      pages.forEach(page => page.classList.remove('active'));
+      const targetPage = document.getElementById(targetId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        const pageTitle = targetPage.querySelector('.page-title');
+        if (pageTitle) {
+          pageTitle.style.animation = 'none';
+          pageTitle.offsetHeight;
+          pageTitle.style.animation = 'fadeIn 0.5s ease-out';
+        }
+      }
+    }
+  });
+});
+document.querySelectorAll('.rights-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const category = card.dataset.category;
+    document.querySelectorAll('.filters').forEach(filter => filter.classList.remove('active'));
+    if (category === 'social') {
+      document.getElementById('socialFilters').classList.add('active');
+    } else if (category === 'labor') {
+      document.getElementById('laborFilters').classList.add('active');
+    } else if (category === 'consumer') {
+      document.getElementById('consumerFilters').classList.add('active');
+    } else if (category === 'personal') {
+      document.getElementById('personalFilters').classList.add('active');
+    }
+  });
+});
+document.querySelectorAll('.filter-option').forEach(option => {
+  option.addEventListener('click', () => {
+    option.classList.toggle('active');
+  });
+});
+document.querySelectorAll('.case-example').forEach(example => {
+  example.addEventListener('mouseenter', () => {
+    example.style.transform = 'scale(1.02)';
+    example.style.transition = 'transform 0.3s ease';
+  });
+  example.addEventListener('mouseleave', () => {
+    example.style.transform = 'scale(1)';
+  });
+});
+async function fetchUsers() {
+  try {
+    const response = await fetch('https://randomuser.me/api/?results=25');
+    const data = await response.json();
+    return data.results.map(user => ({
+      ...user,
+      success: {
+        type: ['社交媒体账号恢复', '劳动权益胜诉', '消费者维权成功', '个人信息保护'][Math.floor(Math.random() * 4)],
+        date: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN'),
+        description: ['成功解封账号并获得赔偿', '讨回欠薪并获得赔偿金', '商品全额退款并获得赔偿', '成功制止信息滥用并获得道歉'][Math.floor(Math.random() * 4)]
+      }
+    }));
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return [];
+  }
+}
+function createFace(user) {
+  const face = document.createElement('div');
+  face.className = 'face';
+  const img = document.createElement('img');
+  img.src = user.picture.large;
+  img.alt = `${user.name.first} ${user.name.last}`;
+  const info = document.createElement('div');
+  info.className = 'face-info';
+  info.innerHTML = `
+    <div class="success-type">${user.success.type}</div>
+    <div class="success-date">${user.success.date}</div>
+    <div class="success-desc">${user.success.description}</div>
+  `;
+  face.appendChild(img);
+  face.appendChild(info);
+  return face;
+}
+async function loadProfiles() {
+  faces.innerHTML = '';
+  const users = await fetchUsers();
+  users.forEach(user => {
+    const face = createFace(user);
+    faces.appendChild(face);
+  });
+  loadSavedSignatures();
+}
+document.getElementById('signatureForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const nameInput = document.getElementById('signatureName');
+  const messageInput = document.getElementById('signatureMessage');
+  const typeSelect = document.getElementById('signatureType');
+  const newSignature = {
+    name: nameInput.value,
+    message: messageInput.value,
+    type: typeSelect.value,
+    timestamp: new Date().toISOString(),
+    avatar: `https://api.dicebear.com/6.x/initials/svg?seed=${encodeURIComponent(nameInput.value)}`
+  };
+  signatures.unshift(newSignature);
+  nameInput.value = '';
+  messageInput.value = '';
+  localStorage.setItem('signatures', JSON.stringify(signatures));
+  updateNamesWall();
+});
+function updateNamesWall() {
+  namesWall.innerHTML = '';
+  signatures.forEach(signature => {
+    const nameEl = document.createElement('div');
+    nameEl.className = 'name';
+    nameEl.dataset.type = signature.type;
+    const avatar = document.createElement('img');
+    avatar.src = signature.avatar;
+    avatar.alt = signature.name;
+    avatar.style.width = '24px';
+    avatar.style.height = '24px';
+    avatar.style.borderRadius = '50%';
+    const nameText = document.createElement('span');
+    nameText.textContent = signature.name;
+    const typeIndicator = document.createElement('span');
+    typeIndicator.className = 'type-indicator';
+    typeIndicator.textContent = {
+      'supporter': '支持者',
+      'ongoing': '维权中',
+      'succeeded': '已成功'
+    }[signature.type];
+    if (signature.message) {
+      const message = document.createElement('div');
+      message.className = 'message';
+      message.textContent = signature.message;
+      nameEl.appendChild(message);
+    }
+    nameEl.appendChild(avatar);
+    nameEl.appendChild(nameText);
+    nameEl.appendChild(typeIndicator);
+    namesWall.appendChild(nameEl);
+  });
+}
+function loadSavedSignatures() {
+  const saved = localStorage.getItem('signatures');
+  if (saved) {
+    try {
+      signatures = JSON.parse(saved);
+      if (namesWall) {
+        updateNamesWall();
+      }
+    } catch (e) {
+      console.error('Error parsing signatures:', e);
+      signatures = [];
+    }
+  }
+}
+document.querySelectorAll('.stat-box').forEach(box => {
+  box.addEventListener('mouseenter', () => {
+    box.style.transform = 'translateY(-5px)';
+    box.style.transition = 'transform 0.3s ease';
+    box.style.background = '#4a4a4a';
+  });
+  box.addEventListener('mouseleave', () => {
+    box.style.transform = 'translateY(0)';
+    box.style.background = '#3a3a3a';
+  });
+});
+document.getElementById('assessmentForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const type = document.querySelector('#assessmentForm select').value;
+  const timeLimit = document.querySelector('input[name="timeLimit"]:checked')?.value;
+  const evidence = document.querySelector('input[name="evidence"]:checked')?.value;
+  let successRate = 0;
+  let suggestions = [];
+  if (timeLimit === 'yes') successRate += 40;
+  if (evidence === 'yes') successRate += 40;
+  if (type) successRate += 20;
+  if (timeLimit === 'no') {
+    suggestions.push('建议尽快收集证据，避免超出法定时效');
+  }
+  if (evidence === 'no') {
+    suggestions.push('建议系统性整理相关证据，完善证据链');
+  }
+  const resultEl = document.getElementById('assessmentResult');
+  resultEl.style.display = 'block';
+  resultEl.querySelector('.result-content').innerHTML = `
+    <div style="font-size: 2rem; color: ${successRate > 60 ? 'var(--card-green)' : 'var(--card-yellow)'}">
+      ${successRate}%
+    </div>
+    <div style="margin: 10px 0">预估成功率</div>
+    ${suggestions.length ? `
+      <div style="margin-top: 15px">
+        <strong>建议：</strong>
+        <ul>
+          ${suggestions.map(s => `<li>${s}</li>`).join('')}
+        </ul>
+      </div>
+    ` : ''}
+  `;
+});
+document.querySelectorAll('.accordion-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const item = header.parentElement;
+    item.classList.toggle('active');
+  });
+});
+document.querySelectorAll('#faces-stats-banner .stat-box, #signatures-stats-banner .stat-box, #assessment-stats-banner .stat-box').forEach(box => {
+  box.addEventListener('mouseenter', () => {
+    box.style.transform = 'translateY(-5px)';
+    box.style.transition = 'transform 0.3s ease';
+    box.style.background = '#4a4a4a';
+  });
+  box.addEventListener('mouseleave', () => {
+    box.style.transform = 'translateY(0)';
+    box.style.background = '#3a3a3a';
+  });
+});
+const progressBar = document.createElement('div');
+progressBar.style.cssText = `
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--card-blue), var(--card-green));
+  z-index: 1000;
+  transition: width 0.3s ease;
+`;
+document.body.appendChild(progressBar);
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = winScroll / height * 100;
+  progressBar.style.width = scrolled + '%';
+});
+menuToggle.addEventListener('click', () => {
+  leftMenu.classList.toggle('active');
+});
+document.addEventListener('click', e => {
+  if (!leftMenu.contains(e.target)) {
+    leftMenu.classList.remove('active');
+  }
+});
+menuItems.forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const targetId = item.getAttribute('data-page');
+    if (targetId) {
+      pages.forEach(page => page.classList.remove('active'));
+      document.getElementById(targetId)?.classList.add('active');
+      leftMenu.classList.remove('active');
+      const pageTitle = document.querySelector(`#${targetId} .page-title`);
+      if (pageTitle) {
+        pageTitle.style.animation = 'none';
+        pageTitle.offsetHeight;
+        pageTitle.style.animation = 'fadeIn 0.5s ease-out';
+      }
+    }
+  });
+});
+document.querySelectorAll('.join-group-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const platform = btn.classList.contains('wechat') ? '微信' : '飞书';
+    alert(`请扫描上方二维码加入${platform}群`);
+  });
+});
+function showTemplatePreview(templateName) {
+  alert(`预览 ${templateName} 模板内容\n\n包含:\n- 基本信息填写说明\n- 具体案例参考\n- 法律依据说明\n- 证据清单建议\n- 文书格式规范`);
+}
+function downloadTemplate(templateName) {
+  const templates = {
+    '个人信息保护投诉模板': '包含个人信息保护相关法律条款、典型案例引用',
+    '工资拖欠仲裁申请书': '包含劳动合同法相关条款、工资计算方法',
+    '电商平台投诉信': '包含消费者权益保护法相关条款、售后保障规定',
+    '违法解雇仲裁申请书': '包含违法解除劳动合同赔偿标准、举证要点',
+    '社交账号申诉模板': '包含互联网用户权益保护相关规定、申诉流程',
+    '证据保全指南': '包含各类证据固定方法、公证要求说明'
+  };
+  const content = templates[templateName] || '通用维权模板';
+  alert(`下载 ${templateName}\n\n${content}\n\n文件格式：Word文档和PDF格式`);
+}
+document.querySelectorAll('.template-btn.view').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const templateName = btn.closest('.template-card').querySelector('.template-title').textContent;
+    showTemplatePreview(templateName);
+  });
+});
+document.querySelectorAll('.template-btn.download').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const templateName = btn.closest('.template-card').querySelector('.template-title').textContent;
+    downloadTemplate(templateName);
+  });
+});
+document.querySelectorAll('.stat-item').forEach(item => {
+  item.addEventListener('mouseenter', () => {
+    item.style.transform = 'translateY(-10px)';
+  });
+  item.addEventListener('mouseleave', () => {
+    item.style.transform = 'translateY(0)';
+  });
+});
+document.querySelectorAll('.success-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'scale(1.02)';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'scale(1)';
+  });
+});
+document.querySelectorAll('.cta-button').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const targetId = btn.getAttribute('data-page');
+    if (targetId) {
+      pages.forEach(page => page.classList.remove('active'));
+      document.getElementById(targetId)?.classList.add('active');
+      const pageTitle = document.querySelector(`#${targetId} .page-title`);
+      if (pageTitle) {
+        pageTitle.style.animation = 'none';
+        pageTitle.offsetHeight;
+        pageTitle.style.animation = 'fadeIn 0.5s ease-out';
+      }
+    }
+  });
+});
+document.querySelectorAll('.resource-link').forEach(link => {
+  link.addEventListener('click', e => {
+    const targetId = link.getAttribute('data-page');
+    if (targetId) {
+      e.preventDefault();
+      pages.forEach(page => page.classList.remove('active'));
+      document.getElementById(targetId)?.classList.add('active');
+      const pageTitle = document.querySelector(`#${targetId} .page-title`);
+      if (pageTitle) {
+        pageTitle.style.animation = 'none';
+        pageTitle.offsetHeight;
+        pageTitle.style.animation = 'fadeIn 0.5s ease-out';
+      }
+    }
+  });
+});
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'translateY(-10px)';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'translateY(0)';
+  });
+});
+document.querySelectorAll('.story-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'translateY(-5px)';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'translateY(0)';
+  });
+});
+document.querySelectorAll('.resource-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'translateY(-5px)';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'translateY(0)';
+  });
+});</script>
+</body></html>
